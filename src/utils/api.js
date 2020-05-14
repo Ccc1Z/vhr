@@ -21,6 +21,9 @@ axios.interceptors.response.use(success => {
         //返回空，那么当请求调用时会什么都得不到，那么只要调用时为空那么该请求就是失败的
         return;
     }
+    if(success.data.msg) {
+        Message.success({message: success.data.msg})
+    }
     //没有问题就将服务器的Json返回到调用处
     return success.data;
 },error => {
