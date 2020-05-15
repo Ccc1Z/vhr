@@ -15,8 +15,27 @@
                 </el-dropdown>
             </el-header>
             <el-container>
-                <el-aside width="200px">Aside</el-aside>
-                <el-main>Main</el-main>
+                <el-aside width="200px">
+                    <el-menu router unique-opened>
+                        <el-submenu :index="index+''" v-for="(item,index) in routes" v-if="!item.hidden" :key="index">
+                            <template slot="title">
+                                <i style="color:cadetblue;margin-right: 5px" :class="item.iconCls"></i>
+                                <span>{{item.name}}</span>
+                            </template>
+                                <el-menu-item v-for="(child,indexj) in item.children" :key="indexj" :index="child.path">{{child.name}}</el-menu-item>
+                        </el-submenu>
+                    </el-menu>
+                </el-aside>
+                <el-main>
+                    <el-breadcrumb separator="/" v-if="this.$router.currentRoute.path != '/home'">
+                        <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+                        <el-breadcrumb-item><a href="/">{{this.$router.currentRoute.name}}</a></el-breadcrumb-item>
+                    </el-breadcrumb>
+                    <div class="homeWelcome" v-if="$router.currentRoute.path=='/home'">
+                        欢迎来到微人事
+                    </div>
+                    <router-view/>
+                </el-main>
             </el-container>
         </el-container>
     </div>
@@ -32,6 +51,11 @@
                 user:JSON.parse(window.sessionStorage.getItem("user"))
             }
         },
+        computed: {
+            routes() {
+                return this.$store.state.routes;
+            }
+        },
         methods:{
             commandHandler(cmd) {
                 if(cmd == 'logout'){
@@ -42,6 +66,8 @@
                     }).then(() => {
                         getRequest("/logout");
                         window.sessionStorage.removeItem("user");
+                        //注销的时候清空Vuex存的东西
+                        this.$store.commit('initRoutes',[]);
                         this.$router.replace("/");
                     }).catch(() => {
                         this.$message({
@@ -56,6 +82,14 @@
 </script>
 
 <style>
+    .homeWelcome {
+        text-align: center;
+        font-size: 30px;
+        font-family: 华文行楷;
+        color: #4b39ff;
+        padding-top:50px;
+    }
+
     .homeHeader {
         background-color: #2057ff;
         /*弹性布局*/
