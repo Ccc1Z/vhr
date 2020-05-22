@@ -17,6 +17,7 @@ axios.interceptors.response.use(success => {
     if(success.status && success.status==200 && success.data.status==500){
         //这是一个业务上的错误
         //展示服务端respBean中的msg
+        //success.data.status是返回JSON的status
         Message.error({message:success.data.msg})
         //返回空，那么当请求调用时会什么都得不到，那么只要调用时为空那么该请求就是失败的
         return;
@@ -56,7 +57,7 @@ export const postKeyValueRequest=(url,params)=>{
         transformRequest:[function (data) {
             let ret = '';
             for(let i in data){
-                //遍历data,将keyvalue转换为Json格式
+                //遍历data,将JSON格式转换为Keyvalu格式
                 ret += encodeURIComponent(i) + '=' + encodeURIComponent(data[i]) + '&'
             }
             return ret;

@@ -7,7 +7,7 @@
                 <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item prop="password">
-                <el-input type="text" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码" @keydown.enter.native="submitLogin" ></el-input>
+                <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码" @keydown.enter.native="submitLogin" ></el-input>
             </el-form-item>
             <el-checkbox v-model="checked" class="loginRemembered"></el-checkbox>
             <el-button type="primary" style="width: 100%" @click="submitLogin" >登录</el-button>
@@ -46,8 +46,10 @@
                                 //如果为空就是登录失败
                                 //把登录信息放在sessionStorage中
                                 window.sessionStorage.setItem("user",JSON.stringify(resp.obj));
+                                //判断是否有"预访问"
+                                let path = this.$route.query.redirect;
                                 //获取当前Vue对象里的router对象，进行页面跳转
-                                this.$router.replace('/home')
+                                this.$router.replace((path == "/" || path == undefined) ? '/home' : path);
                             }
                         })
                         //alert('submit!');
