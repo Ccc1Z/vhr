@@ -38,6 +38,14 @@
                         label="创建时间"
                         width="150">
                 </el-table-column>
+                <el-table-column
+                        prop="enabled"
+                        label="是否启用">
+                    <template slot-scope="scope">
+                        <el-tag type="success" v-if="scope.row.enabled">已启用</el-tag>
+                        <el-tag type="danger" v-else>未启用</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button
